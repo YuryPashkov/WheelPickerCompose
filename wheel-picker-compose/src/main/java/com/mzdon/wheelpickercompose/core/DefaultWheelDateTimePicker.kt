@@ -150,8 +150,7 @@ internal fun DefaultWheelDateTimePicker(
                     }
 
                     return@DefaultWheelTimePicker when (snappedTime) {
-                        is SnappedTime.Hour,
-                        is SnappedTime.AmPm -> {
+                        is SnappedTime.Hour -> {
                             onSnappedDateTime(
                                 SnappedDateTime.Hour(
                                     snappedDateTime,
@@ -170,6 +169,16 @@ internal fun DefaultWheelDateTimePicker(
                                 )
                             )
                             snappedDateTime.minute
+                        }
+
+                        is SnappedTime.AmPm -> {
+                            onSnappedDateTime(
+                                SnappedDateTime.Hour(
+                                    snappedDateTime,
+                                    snappedDateTime.hour
+                                )
+                            )
+                            amPmIndexFromTime(snappedDateTime.toLocalTime())
                         }
                     }
                 }

@@ -214,5 +214,3 @@ internal class DefaultSelectorProperties(
         return rememberUpdatedState(border)
     }
 }
-
-
