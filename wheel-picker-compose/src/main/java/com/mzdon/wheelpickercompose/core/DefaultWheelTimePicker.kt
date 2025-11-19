@@ -118,10 +118,18 @@ internal fun DefaultWheelTimePicker(
                     onLog("Hour onScollFinished - snappedIndex: $snappedIndex")
 
                     val newHour = if (timeFormat == TimeFormat.HOUR_24) {
-                        hours.find { it.index == snappedIndex }?.value
+                        if (snappedIndex >= hours.size) {
+                            hours.last().value
+                        } else {
+                            hours.find { it.index == snappedIndex }?.value
+                        }
                     } else {
                         amPmHourToHour24(
-                            amPmHours.find { it.index == snappedIndex }?.value ?: 0,
+                            if (snappedIndex >= amPmHours.size) {
+                                amPmHours.last().value
+                            } else {
+                                amPmHours.find { it.index == snappedIndex }?.value ?: 0
+                            },
                             snappedTime.minute,
                             snappedAmPm.value
                         )
@@ -180,10 +188,18 @@ internal fun DefaultWheelTimePicker(
                 onScrollFinished = { snappedIndex ->
                     onLog("Minute onScollFinished - snappedIndex: $snappedIndex")
 
-                    val newMinute = minutes.find { it.index == snappedIndex }?.value
+                    val newMinute = if (snappedIndex >= minutes.size) {
+                        minutes.last().value
+                    } else {
+                        minutes.find { it.index == snappedIndex }?.value
+                    }
 
                     val newHour = if (timeFormat == TimeFormat.HOUR_24) {
-                        hours.find { it.value == snappedTime.hour }?.value
+                        if (snappedIndex >= hours.size) {
+                            hours.last().value
+                        } else {
+                            hours.find { it.value == snappedTime.hour }?.value
+                        }
                     } else {
                         amPmHourToHour24(
                             amPmHours.find { it.value == localTimeToAmPmHour(snappedTime) }?.value
