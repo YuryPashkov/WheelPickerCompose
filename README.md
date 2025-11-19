@@ -80,6 +80,6 @@ compileOptions {
 //
 dependencies {
     //
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.6"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.5"
 }
 ```
