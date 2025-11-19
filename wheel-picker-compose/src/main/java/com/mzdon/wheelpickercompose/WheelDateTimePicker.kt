@@ -13,11 +13,13 @@ import com.mzdon.wheelpickercompose.core.SelectorProperties
 import com.mzdon.wheelpickercompose.core.TimeFormat
 import com.mzdon.wheelpickercompose.core.WheelPickerDefaults
 import java.time.LocalDateTime
+import java.util.Locale
 
 @Composable
 fun WheelDateTimePicker(
     modifier: Modifier = Modifier,
     startDateTime: LocalDateTime = LocalDateTime.now(),
+    dateLocale: Locale = Locale.getDefault(),
     minDateTime: LocalDateTime = LocalDateTime.MIN,
     maxDateTime: LocalDateTime = LocalDateTime.MAX,
     yearsRange: IntRange? = IntRange(1922, 2122),
@@ -32,6 +34,7 @@ fun WheelDateTimePicker(
     DefaultWheelDateTimePicker(
         modifier,
         startDateTime,
+        dateLocale,
         minDateTime,
         maxDateTime,
         yearsRange,

@@ -13,11 +13,13 @@ import com.mzdon.wheelpickercompose.core.SelectorProperties
 import com.mzdon.wheelpickercompose.core.TimeFormat
 import com.mzdon.wheelpickercompose.core.WheelPickerDefaults
 import java.time.LocalTime
+import java.util.Locale
 
 @Composable
 fun WheelTimePicker(
     modifier: Modifier = Modifier,
     startTime: LocalTime = LocalTime.now(),
+    dateLocale: Locale = Locale.getDefault(),
     minTime: LocalTime = LocalTime.MIN,
     maxTime: LocalTime = LocalTime.MAX,
     timeFormat: TimeFormat = TimeFormat.HOUR_24,
@@ -32,6 +34,7 @@ fun WheelTimePicker(
     DefaultWheelTimePicker(
         modifier,
         startTime,
+        dateLocale,
         minTime,
         maxTime,
         timeFormat,
