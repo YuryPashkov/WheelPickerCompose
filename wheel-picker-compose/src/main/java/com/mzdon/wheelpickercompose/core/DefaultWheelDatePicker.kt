@@ -7,10 +7,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,9 +33,7 @@ internal fun DefaultWheelDatePicker(
     selectorProperties: SelectorProperties = WheelPickerDefaults.selectorProperties(),
     onSnappedDate: (snappedDate: SnappedDate) -> Int? = { _ -> null }
 ) {
-    var snappedDate by remember { mutableStateOf(startDate) }
-
-    var dayOfMonths = calculateDayOfMonths(snappedDate.month.value, snappedDate.year)
+    var dayOfMonths = calculateDayOfMonths(startDate.month.value, startDate.year)
 
     val months = remember {
         (1..12).map {
@@ -88,34 +83,38 @@ internal fun DefaultWheelDatePicker(
                 ),
                 focusedIndex = dayOfMonths.find { it.value == startDate.dayOfMonth }?.index ?: 0,
                 onScrollFinished = { snappedIndex ->
-
                     val newDayOfMonth = if (snappedIndex >= dayOfMonths.size) {
                         dayOfMonths.last().value
                     } else {
                         dayOfMonths.find { it.index == snappedIndex }?.value
                     }
 
-                    newDayOfMonth?.let {
-                        val newDate = snappedDate.withDayOfMonth(newDayOfMonth)
+                    if (newDayOfMonth == null) {
+                        return@WheelTextPicker null
+                    } else {
+                        val newDate = startDate.withDayOfMonth(newDayOfMonth)
 
-                        if (!newDate.isBefore(minDate) && !newDate.isAfter(maxDate)) {
-                            snappedDate = newDate
+                        val snappedDate = if (newDate.isBefore(minDate)) {
+                            minDate
+                        } else if (newDate.isAfter(maxDate)) {
+                            maxDate
+                        } else {
+                            newDate
                         }
 
                         val newIndex =
                             dayOfMonths.find { it.value == snappedDate.dayOfMonth }?.index
-
-                        newIndex?.let {
-                            onSnappedDate(
+                        if (newIndex == null) {
+                            return@WheelTextPicker null
+                        } else {
+                            return@WheelTextPicker onSnappedDate(
                                 SnappedDate.DayOfMonth(
                                     localDate = snappedDate,
                                     index = newIndex
                                 )
-                            )?.let { return@WheelTextPicker it }
+                            )
                         }
                     }
-
-                    return@WheelTextPicker dayOfMonths.find { it.value == snappedDate.dayOfMonth }?.index
                 }
             )
             //Month
@@ -133,16 +132,22 @@ internal fun DefaultWheelDatePicker(
                 ),
                 focusedIndex = months.find { it.value == startDate.monthValue }?.index ?: 0,
                 onScrollFinished = { snappedIndex ->
+                    val newMonth = if (snappedIndex >= months.size) {
+                        months.last().value
+                    } else {
+                        months.find { it.index == snappedIndex }?.value
+                    }
 
-                    val newMonth = if (snappedIndex >= months.size) months.last().value
-                    else months.find { it.index == snappedIndex }?.value
-
-                    newMonth?.let {
-
-                        val newDate = snappedDate.withMonth(newMonth)
-
-                        if (!newDate.isBefore(minDate) && !newDate.isAfter(maxDate)) {
-                            snappedDate = newDate
+                    if (newMonth == null) {
+                        return@WheelTextPicker null
+                    } else {
+                        val newDate = startDate.withMonth(newMonth)
+                        val snappedDate = if (newDate.isBefore(minDate)) {
+                            minDate
+                        } else if (newDate.isAfter(maxDate)) {
+                            maxDate
+                        } else {
+                            newDate
                         }
 
                         dayOfMonths =
@@ -150,18 +155,17 @@ internal fun DefaultWheelDatePicker(
 
                         val newIndex = months.find { it.value == snappedDate.monthValue }?.index
 
-                        newIndex?.let {
-                            onSnappedDate(
+                        if (newIndex == null) {
+                            return@WheelTextPicker null
+                        } else {
+                            return@WheelTextPicker onSnappedDate(
                                 SnappedDate.Month(
                                     localDate = snappedDate,
                                     index = newIndex
                                 )
-                            )?.let { return@WheelTextPicker it }
+                            )
                         }
                     }
-
-
-                    return@WheelTextPicker months.find { it.value == snappedDate.monthValue }?.index
                 }
             )
             //Year
@@ -180,16 +184,23 @@ internal fun DefaultWheelDatePicker(
                     ),
                     focusedIndex = years.find { it.value == startDate.year }?.index ?: 0,
                     onScrollFinished = { snappedIndex ->
+                        val newYear = if (snappedIndex >= years.size) {
+                            years.last().value
+                        } else {
+                            years.find { it.index == snappedIndex }?.value
+                        }
 
-                        val newYear = if (snappedIndex >= years.size) years.last().value
-                        else years.find { it.index == snappedIndex }?.value
+                        if (newYear == null) {
+                            return@WheelTextPicker null
+                        } else {
+                            val newDate = startDate.withYear(newYear)
 
-                        newYear?.let {
-
-                            val newDate = snappedDate.withYear(newYear)
-
-                            if (!newDate.isBefore(minDate) && !newDate.isAfter(maxDate)) {
-                                snappedDate = newDate
+                            val snappedDate = if (newDate.isBefore(minDate)) {
+                                minDate
+                            } else if (newDate.isAfter(maxDate)) {
+                                maxDate
+                            } else {
+                                newDate
                             }
 
                             dayOfMonths =
@@ -197,18 +208,17 @@ internal fun DefaultWheelDatePicker(
 
                             val newIndex = years.find { it.value == snappedDate.year }?.index
 
-                            newIndex?.let {
-                                onSnappedDate(
+                            if (newIndex == null) {
+                                return@WheelTextPicker null
+                            } else {
+                                return@WheelTextPicker onSnappedDate(
                                     SnappedDate.Year(
                                         localDate = snappedDate,
                                         index = newIndex
                                     )
-                                )?.let { return@WheelTextPicker it }
-
+                                )
                             }
                         }
-
-                        return@WheelTextPicker years.find { it.value == snappedDate.year }?.index
                     }
                 )
             }

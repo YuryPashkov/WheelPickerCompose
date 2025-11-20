@@ -1,15 +1,24 @@
 package com.mzdon.wheelpickercompose
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,6 +28,7 @@ import com.mzdon.wheelpickercompose.core.DurationFormat
 import com.mzdon.wheelpickercompose.core.TimeFormat
 import com.mzdon.wheelpickercompose.core.WheelPickerDefaults
 import com.mzdon.wheelpickercompose.ui.theme.WheelPickerComposeTheme
+import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -33,12 +43,31 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
                         WheelTimePicker { snappedTime ->
                             println(snappedTime)
                         }
+                        var startDate by remember {
+                            mutableStateOf(LocalDate.of(1993, 1, 12))
+                        }
+                        WheelDatePicker(
+                            startDate = startDate,
+                            minDate = LocalDate.of(1900, 1, 1),
+                            maxDate = LocalDate.now(),
+                        ) { snappedDate ->
+                            Log.d("snappedDate", "$snappedDate")
+                            startDate = snappedDate
+                        }
+
+                        Button(onClick = {
+                            startDate = LocalDate.of(1999, 11, 7)
+                        }) {
+                            Text(text = "Change startDate to 07.11.1999")
+                        }
+
                         WheelDatePicker { snappedDate ->
                             println(snappedDate)
                         }
