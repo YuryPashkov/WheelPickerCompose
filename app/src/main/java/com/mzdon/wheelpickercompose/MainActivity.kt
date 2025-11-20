@@ -28,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.mzdon.wheelpickercompose.core.DurationFormat
-import com.mzdon.wheelpickercompose.core.TimeFormat
 import com.mzdon.wheelpickercompose.core.WheelPickerDefaults
 import com.mzdon.wheelpickercompose.ui.theme.WheelPickerComposeTheme
 import java.time.LocalDate
@@ -63,6 +62,7 @@ class MainActivity : ComponentActivity() {
                         ) { snappedTime ->
                             println(snappedTime)
                         }
+                        Text("Time Selected: $startTime")
                         Button(onClick = {
                             startTime = LocalTime.of(19, 23)
                         }) {
@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
                             startDate = snappedDate
                         }
 
-                        Text("Time Selected: $startDate")
+                        Text("Date Selected: $startDate")
 
                         Button(onClick = {
                             startDate = LocalDate.of(1999, 11, 7)
@@ -102,7 +102,6 @@ class MainActivity : ComponentActivity() {
                             maxDateTime = LocalDateTime.of(
                                 2025, 10, 20, 5, 30
                             ),
-                            timeFormat = TimeFormat.AM_PM,
                             size = DpSize(200.dp, 100.dp),
                             rowCount = 5,
                             textStyle = MaterialTheme.typography.titleSmall,
@@ -117,7 +116,6 @@ class MainActivity : ComponentActivity() {
                             println(snappedDateTime)
                         }
                         WheelTimePicker(
-                            timeFormat = TimeFormat.AM_PM,
                             size = DpSize(200.dp, 100.dp),
                             rowCount = 5,
                             textStyle = MaterialTheme.typography.titleSmall,

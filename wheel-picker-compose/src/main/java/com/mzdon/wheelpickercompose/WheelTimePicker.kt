@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.mzdon.wheelpickercompose.core.DefaultWheelTimePicker
 import com.mzdon.wheelpickercompose.core.SelectorProperties
-import com.mzdon.wheelpickercompose.core.TimeFormat
 import com.mzdon.wheelpickercompose.core.WheelPickerDefaults
 import java.time.LocalTime
 import java.util.Locale
@@ -22,7 +21,6 @@ fun WheelTimePicker(
     dateLocale: Locale = Locale.getDefault(),
     minTime: LocalTime = LocalTime.MIN,
     maxTime: LocalTime = LocalTime.MAX,
-    timeFormat: TimeFormat = TimeFormat.HOUR_24,
     size: DpSize = DpSize(128.dp, 128.dp),
     rowCount: Int = 3,
     textStyle: TextStyle = MaterialTheme.typography.titleMedium,
@@ -37,7 +35,6 @@ fun WheelTimePicker(
         dateLocale,
         minTime,
         maxTime,
-        timeFormat,
         size,
         rowCount,
         textStyle,

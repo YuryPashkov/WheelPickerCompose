@@ -29,7 +29,6 @@ internal fun DefaultWheelDateTimePicker(
     minDateTime: LocalDateTime = LocalDateTime.MIN,
     maxDateTime: LocalDateTime = LocalDateTime.MAX,
     yearsRange: IntRange? = IntRange(1922, 2122),
-    timeFormat: TimeFormat = TimeFormat.HOUR_24,
     size: DpSize = DpSize(256.dp, 128.dp),
     rowCount: Int = 3,
     textStyle: TextStyle = MaterialTheme.typography.titleMedium,
@@ -125,7 +124,6 @@ internal fun DefaultWheelDateTimePicker(
             DefaultWheelTimePicker(
                 startTime = startDateTime.toLocalTime(),
                 dateLocale = dateLocale,
-                timeFormat = timeFormat,
                 size = DpSize(
                     width = if (yearsRange == null) size.width * 3 / 6 else size.width * 2 / 5,
                     height = size.height

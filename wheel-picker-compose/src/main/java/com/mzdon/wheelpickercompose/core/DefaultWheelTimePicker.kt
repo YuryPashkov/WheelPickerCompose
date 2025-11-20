@@ -1,5 +1,6 @@
 package com.mzdon.wheelpickercompose.core
 
+import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -8,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,9 +17,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -31,7 +37,6 @@ internal fun DefaultWheelTimePicker(
     dateLocale: Locale = Locale.getDefault(),
     minTime: LocalTime = LocalTime.MIN,
     maxTime: LocalTime = LocalTime.MAX,
-    timeFormat: TimeFormat = TimeFormat.HOUR_24,
     size: DpSize = DpSize(128.dp, 128.dp),
     rowCount: Int = 3,
     textStyle: TextStyle = MaterialTheme.typography.titleMedium,
@@ -41,7 +46,36 @@ internal fun DefaultWheelTimePicker(
     onLog: (log: String) -> Unit = {}
 ) {
     onLog("Recomposing - startTime: $startTime")
+    val context = LocalContext.current
+    var timeFormat by remember {
+        mutableStateOf(
+            if (DateFormat.is24HourFormat(context)) {
+                TimeFormat.HOUR_24
+            } else {
+                TimeFormat.AM_PM
+            }
+        )
+    }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> {
+                    timeFormat = if (DateFormat.is24HourFormat(context)) {
+                        TimeFormat.HOUR_24
+                    } else {
+                        TimeFormat.AM_PM
+                    }
+                }
+                else -> {}
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
 
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
     val hours = remember {
         (0..23).map {
             Hour(
