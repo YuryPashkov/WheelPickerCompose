@@ -43,42 +43,55 @@ internal fun DefaultWheelTimePicker(
     onLog("Recomposing - startTime: $startTime")
 
     var snappedTime by remember { mutableStateOf(startTime.truncatedTo(ChronoUnit.MINUTES)) }
-
-    val hours = (0..23).map {
-        Hour(
-            text = it.toString().padStart(2, '0'),
-            value = it,
-            index = it
-        )
-    }
-    val amPmHours = (1..12).map {
-        AmPmHour(
-            text = it.toString(),
-            value = it,
-            index = it - 1
-        )
+    val hours = remember {
+        (0..23).map {
+            Hour(
+                text = it.toString().padStart(2, '0'),
+                value = it,
+                index = it
+            )
+        }
     }
 
-    val minutes = (0..59).map {
-        Minute(
-            text = it.toString().padStart(2, '0'),
-            value = it,
-            index = it
-        )
+    val hoursTexts = remember { hours.map { it.text } }
+    val amPmHours = remember {
+        (1..12).map {
+            AmPmHour(
+                text = it.toString(),
+                value = it,
+                index = it - 1
+            )
+        }
     }
 
-    val amPms = listOf(
-        AmPm(
-            text = amPmStringByLocale(AmPmValue.AM, dateLocale),
-            value = AmPmValue.AM,
-            index = 0
-        ),
-        AmPm(
-            text = amPmStringByLocale(AmPmValue.PM, dateLocale),
-            value = AmPmValue.PM,
-            index = 1
+    val amPmHoursTexts = remember { amPmHours.map { it.text } }
+
+    val minutes = remember {
+        (0..59).map {
+            Minute(
+                text = it.toString().padStart(2, '0'),
+                value = it,
+                index = it
+            )
+        }
+    }
+
+    val minutesTexts = remember { minutes.map { it.text } }
+
+    val amPms = remember {
+        listOf(
+            AmPm(
+                text = amPmStringByLocale(AmPmValue.AM, dateLocale),
+                value = AmPmValue.AM,
+                index = 0
+            ),
+            AmPm(
+                text = amPmStringByLocale(AmPmValue.PM, dateLocale),
+                value = AmPmValue.PM,
+                index = 1
+            )
         )
-    )
+    }
 
     var snappedAmPm by remember {
         mutableStateOf(
@@ -104,7 +117,7 @@ internal fun DefaultWheelTimePicker(
                     width = size.width / if (timeFormat == TimeFormat.HOUR_24) 2 else 3,
                     height = size.height
                 ),
-                texts = if (timeFormat == TimeFormat.HOUR_24) hours.map { it.text } else amPmHours.map { it.text },
+                texts = if (timeFormat == TimeFormat.HOUR_24) hoursTexts else amPmHoursTexts,
                 rowCount = rowCount,
                 style = textStyle,
                 color = textColor,
@@ -177,7 +190,7 @@ internal fun DefaultWheelTimePicker(
                     width = size.width / if (timeFormat == TimeFormat.HOUR_24) 2 else 3,
                     height = size.height
                 ),
-                texts = minutes.map { it.text },
+                texts = minutesTexts,
                 rowCount = rowCount,
                 style = textStyle,
                 color = textColor,

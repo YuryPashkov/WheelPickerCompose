@@ -40,22 +40,26 @@ internal fun DefaultWheelDatePicker(
 
     var dayOfMonths = calculateDayOfMonths(snappedDate.month.value, snappedDate.year)
 
-    val months = (1..12).map {
-        Month(
-            text = if (size.width / 3 < 55.dp) {
-                DateFormatSymbols(dateLocale).shortMonths[it - 1]
-            } else DateFormatSymbols(dateLocale).months[it - 1],
-            value = it,
-            index = it - 1
-        )
+    val months = remember {
+        (1..12).map {
+            Month(
+                text = if (size.width / 3 < 55.dp) {
+                    DateFormatSymbols(dateLocale).shortMonths[it - 1]
+                } else DateFormatSymbols(dateLocale).months[it - 1],
+                value = it,
+                index = it - 1
+            )
+        }
     }
 
-    val years = yearsRange?.map {
-        Year(
-            text = it.toString(),
-            value = it,
-            index = yearsRange.indexOf(it)
-        )
+    val years = remember {
+        yearsRange?.map {
+            Year(
+                text = it.toString(),
+                value = it,
+                index = yearsRange.indexOf(it)
+            )
+        }
     }
 
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
@@ -85,9 +89,11 @@ internal fun DefaultWheelDatePicker(
                 focusedIndex = dayOfMonths.find { it.value == startDate.dayOfMonth }?.index ?: 0,
                 onScrollFinished = { snappedIndex ->
 
-                    val newDayOfMonth =
-                        if (snappedIndex >= dayOfMonths.size) dayOfMonths.last().value
-                        else dayOfMonths.find { it.index == snappedIndex }?.value
+                    val newDayOfMonth = if (snappedIndex >= dayOfMonths.size) {
+                        dayOfMonths.last().value
+                    } else {
+                        dayOfMonths.find { it.index == snappedIndex }?.value
+                    }
 
                     newDayOfMonth?.let {
                         val newDate = snappedDate.withDayOfMonth(newDayOfMonth)
