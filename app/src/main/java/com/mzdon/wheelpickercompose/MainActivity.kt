@@ -7,7 +7,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -30,6 +33,7 @@ import com.mzdon.wheelpickercompose.core.WheelPickerDefaults
 import com.mzdon.wheelpickercompose.ui.theme.WheelPickerComposeTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -39,7 +43,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             WheelPickerComposeTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.systemBars),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column(
@@ -47,8 +51,22 @@ class MainActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        WheelTimePicker { snappedTime ->
+                        var startTime by remember {
+                            mutableStateOf(LocalTime.of(12, 0))
+                        }
+                        WheelTimePicker(
+                            startTime = startTime,
+                            onSnappedTime = { snappedTime ->
+                                Log.d("snappedDate", "$snappedTime")
+                                startTime = snappedTime
+                            }
+                        ) { snappedTime ->
                             println(snappedTime)
+                        }
+                        Button(onClick = {
+                            startTime = LocalTime.of(19, 23)
+                        }) {
+                            Text(text = "Change startTime to 19:23")
                         }
                         var startDate by remember {
                             mutableStateOf(LocalDate.of(1993, 1, 12))
@@ -61,6 +79,8 @@ class MainActivity : ComponentActivity() {
                             Log.d("snappedDate", "$snappedDate")
                             startDate = snappedDate
                         }
+
+                        Text("Time Selected: $startDate")
 
                         Button(onClick = {
                             startDate = LocalDate.of(1999, 11, 7)
