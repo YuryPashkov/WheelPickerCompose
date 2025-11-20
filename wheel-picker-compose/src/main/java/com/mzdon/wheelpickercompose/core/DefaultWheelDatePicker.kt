@@ -21,7 +21,7 @@ import java.util.Locale
 @Composable
 internal fun DefaultWheelDatePicker(
     modifier: Modifier = Modifier,
-    startDate: LocalDate = LocalDate.now(),
+    startDate: LocalDate,
     dateLocale: Locale = Locale.getDefault(),
     minDate: LocalDate = LocalDate.MIN,
     maxDate: LocalDate = LocalDate.MAX,
@@ -33,7 +33,51 @@ internal fun DefaultWheelDatePicker(
     selectorProperties: SelectorProperties = WheelPickerDefaults.selectorProperties(),
     onSnappedDate: (snappedDate: SnappedDate) -> Int? = { _ -> null }
 ) {
-    var dayOfMonths = calculateDayOfMonths(startDate.month.value, startDate.year)
+    val month31day = remember {
+        (1..31).map {
+            DayOfMonth(
+                text = it.toString(),
+                value = it,
+                index = it - 1
+            )
+        }
+    }
+    val month30day = remember {
+        (1..30).map {
+            DayOfMonth(
+                text = it.toString(),
+                value = it,
+                index = it - 1
+            )
+        }
+    }
+    val month29day = remember {
+        (1..29).map {
+            DayOfMonth(
+                text = it.toString(),
+                value = it,
+                index = it - 1
+            )
+        }
+    }
+    val month28day = remember {
+        (1..28).map {
+            DayOfMonth(
+                text = it.toString(),
+                value = it,
+                index = it - 1
+            )
+        }
+    }
+
+    var dayOfMonths = calculateDayOfMonths(
+        month = startDate.month.value,
+        year = startDate.year,
+        month31day = month31day,
+        month30day = month30day,
+        month29day = month29day,
+        month28day = month28day,
+    )
 
     val months = remember {
         (1..12).map {
@@ -151,7 +195,14 @@ internal fun DefaultWheelDatePicker(
                         }
 
                         dayOfMonths =
-                            calculateDayOfMonths(snappedDate.month.value, snappedDate.year)
+                            calculateDayOfMonths(
+                                month = snappedDate.month.value,
+                                year = snappedDate.year,
+                                month31day = month31day,
+                                month30day = month30day,
+                                month29day = month29day,
+                                month28day = month28day,
+                            )
 
                         val newIndex = months.find { it.value == snappedDate.monthValue }?.index
 
@@ -204,7 +255,14 @@ internal fun DefaultWheelDatePicker(
                             }
 
                             dayOfMonths =
-                                calculateDayOfMonths(snappedDate.month.value, snappedDate.year)
+                                calculateDayOfMonths(
+                                    month = snappedDate.month.value,
+                                    year = snappedDate.year,
+                                    month31day = month31day,
+                                    month30day = month30day,
+                                    month29day = month29day,
+                                    month28day = month28day,
+                                )
 
                             val newIndex = years.find { it.value == snappedDate.year }?.index
 
@@ -244,39 +302,15 @@ private data class Year(
     val index: Int
 )
 
-internal fun calculateDayOfMonths(month: Int, year: Int): List<DayOfMonth> {
-
+internal fun calculateDayOfMonths(
+    month: Int,
+    year: Int,
+    month31day: List<DayOfMonth>,
+    month30day: List<DayOfMonth>,
+    month29day: List<DayOfMonth>,
+    month28day: List<DayOfMonth>,
+): List<DayOfMonth> {
     val isLeapYear = LocalDate.of(year, month, 1).isLeapYear
-
-    val month31day = (1..31).map {
-        DayOfMonth(
-            text = it.toString(),
-            value = it,
-            index = it - 1
-        )
-    }
-    val month30day = (1..30).map {
-        DayOfMonth(
-            text = it.toString(),
-            value = it,
-            index = it - 1
-        )
-    }
-    val month29day = (1..29).map {
-        DayOfMonth(
-            text = it.toString(),
-            value = it,
-            index = it - 1
-        )
-    }
-    val month28day = (1..28).map {
-        DayOfMonth(
-            text = it.toString(),
-            value = it,
-            index = it - 1
-        )
-    }
-
     return when (month) {
         1 -> {
             month31day

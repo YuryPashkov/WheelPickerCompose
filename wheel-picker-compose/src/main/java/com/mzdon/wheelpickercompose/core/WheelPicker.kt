@@ -19,6 +19,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -124,7 +125,7 @@ private fun calculateAnimatedAlpha(
     index: Int,
     rowCount: Int
 ): Float {
-    val layoutInfo = remember { derivedStateOf { lazyListState.layoutInfo } }.value
+    val layoutInfo by remember { derivedStateOf { lazyListState.layoutInfo } }
     val distanceToIndexSnap =
         (layoutInfo.visibleItemsInfo.firstOrNull { it.index == index }?.offset ?: 0).absoluteValue
     val viewPortHeight = layoutInfo.viewportSize.height.toFloat()
@@ -143,7 +144,7 @@ private fun calculateAnimatedRotationX(
     index: Int,
     rowCount: Int
 ): Float {
-    val layoutInfo = remember { derivedStateOf { lazyListState.layoutInfo } }.value
+    val layoutInfo by remember { derivedStateOf { lazyListState.layoutInfo } }
     val distanceToIndexSnap =
         layoutInfo.visibleItemsInfo.firstOrNull { it.index == index }?.offset ?: 0
     val viewPortHeight = layoutInfo.viewportSize.height.toFloat()
