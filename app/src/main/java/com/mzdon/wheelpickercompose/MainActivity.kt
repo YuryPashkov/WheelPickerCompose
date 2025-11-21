@@ -24,8 +24,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.mzdon.wheelpickercompose.core.DurationFormat
 import com.mzdon.wheelpickercompose.core.WheelPickerDefaults
@@ -45,8 +50,22 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.systemBars),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val scrollState = rememberScrollState()
+                    val nestedScrollConnection = remember {
+                        object : NestedScrollConnection {
+                            override fun onPostScroll(
+                                consumed: Offset,
+                                available: Offset,
+                                source: NestedScrollSource
+                            ): Offset {
+                                Log.d("NestedScrollConnection", "onPostScroll consumed = $consumed available = $available source = $source")
+                                return available
+                            }
+                        }
+                    }
                     Column(
-                        modifier = Modifier.verticalScroll(rememberScrollState()),
+                        modifier = Modifier.verticalScroll(scrollState)
+                            .nestedScroll(nestedScrollConnection),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
