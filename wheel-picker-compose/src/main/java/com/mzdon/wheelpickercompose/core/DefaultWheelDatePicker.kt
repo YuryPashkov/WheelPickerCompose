@@ -410,7 +410,7 @@ internal fun calculateDayOfMonths(
     }
 }
 
-private fun getDateFormatOrder(): PickDateOrder {
+fun getDateFormatOrder(): PickDateOrder {
     val formatter = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault())
     val pattern = (formatter as? SimpleDateFormat?)?.toPattern()?.uppercase()
     return if (pattern == null) {
