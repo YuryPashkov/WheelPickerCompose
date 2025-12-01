@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,7 +59,7 @@ class MainActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        var startTime by remember {
+                        var startTime by rememberSaveable {
                             mutableStateOf(LocalTime.of(12, 0))
                         }
                         WheelTimePicker(
@@ -76,7 +77,7 @@ class MainActivity : ComponentActivity() {
                         }) {
                             Text(text = "Change startTime to 19:23")
                         }
-                        var startDate by remember {
+                        var startDate by rememberSaveable {
                             mutableStateOf(LocalDate.of(1993, 1, 12))
                         }
                         WheelDatePicker(

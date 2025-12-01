@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -80,14 +81,29 @@ internal fun DefaultWheelDatePicker(
         }
     }
 
-    var dayOfMonths = calculateDayOfMonths(
-        month = startDate.month.value,
-        year = startDate.year,
-        month31day = month31day,
-        month30day = month30day,
-        month29day = month29day,
-        month28day = month28day,
-    )
+    var dayOfMonths by remember {
+        mutableStateOf(
+            calculateDayOfMonths(
+                month = startDate.month.value,
+                year = startDate.year,
+                month31day = month31day,
+                month30day = month30day,
+                month29day = month29day,
+                month28day = month28day,
+            )
+        )
+    }
+
+    LaunchedEffect(startDate) {
+        dayOfMonths = calculateDayOfMonths(
+            month = startDate.month.value,
+            year = startDate.year,
+            month31day = month31day,
+            month30day = month30day,
+            month29day = month29day,
+            month28day = month28day,
+        )
+    }
 
     val months = remember {
         (1..12).map {
