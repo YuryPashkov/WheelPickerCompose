@@ -45,6 +45,8 @@ internal fun WheelPicker(
     val lazyListState = rememberLazyListState(focusedIndex)
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState)
     val isScrollInProgress = lazyListState.isScrollInProgress
+    val canScrollForward = lazyListState.canScrollForward
+    val canScrollBackward = lazyListState.canScrollBackward
 
     LaunchedEffect(focusedIndex) {
         if (calculateSnappedItemIndex(lazyListState)?.let { it != focusedIndex } == true) {
@@ -52,8 +54,8 @@ internal fun WheelPicker(
         }
     }
 
-    LaunchedEffect(isScrollInProgress, count) {
-        if (!isScrollInProgress) {
+    LaunchedEffect(isScrollInProgress, count, canScrollForward, canScrollBackward) {
+        if (!isScrollInProgress || !canScrollForward || !canScrollBackward) {
             onScrollFinished(calculateSnappedItemIndex(lazyListState) ?: focusedIndex)?.let {
                 lazyListState.scrollToItem(it)
             }
