@@ -34,7 +34,11 @@ fun WheelTextPicker(
         Text(
             text = texts[index],
             style = style,
-            color = color,
+            color = if (index == focusedIndex) {
+                color
+            } else {
+                color.copy(alpha = 0.7f)
+            },
             maxLines = 1
         )
     }

@@ -24,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
@@ -92,13 +91,6 @@ internal fun WheelPicker(
                     modifier = Modifier
                         .height(size.height / rowCount)
                         .width(size.width)
-                        .alpha(
-                            calculateAnimatedAlpha(
-                                lazyListState = lazyListState,
-                                index = index,
-                                rowCount = rowCount
-                            )
-                        )
                         .graphicsLayer {
                             this.rotationX = rotationX
                         },
@@ -117,25 +109,6 @@ private fun calculateSnappedItemIndex(lazyListState: LazyListState): Int? {
         it.offset.absoluteValue
     }
     return closestToMiddle?.index
-}
-
-@Composable
-private fun calculateAnimatedAlpha(
-    lazyListState: LazyListState,
-    index: Int,
-    rowCount: Int
-): Float {
-    val layoutInfo by remember { derivedStateOf { lazyListState.layoutInfo } }
-    val distanceToIndexSnap =
-        (layoutInfo.visibleItemsInfo.firstOrNull { it.index == index }?.offset ?: 0).absoluteValue
-    val viewPortHeight = layoutInfo.viewportSize.height.toFloat()
-    val singleViewPortHeight = viewPortHeight / rowCount
-
-    return if (distanceToIndexSnap in 0..singleViewPortHeight.toInt()) {
-        1.2f - (distanceToIndexSnap / singleViewPortHeight)
-    } else {
-        0.2f
-    }
 }
 
 @Composable

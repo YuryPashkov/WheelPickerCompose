@@ -64,6 +64,7 @@ class MainActivity : ComponentActivity() {
                         }
                         WheelTimePicker(
                             startTime = startTime,
+                            rowCount = 5,
                             onSnappedTime = { snappedTime ->
                                 Log.d("snappedDate", "$snappedTime")
                                 startTime = snappedTime
@@ -82,6 +83,7 @@ class MainActivity : ComponentActivity() {
                         }
                         WheelDatePicker(
                             startDate = startDate,
+                            rowCount = 5,
                             minDate = LocalDate.of(1900, 1, 1),
                             maxDate = LocalDate.now(),
                         ) { snappedDate ->
